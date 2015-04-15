@@ -12,6 +12,7 @@ import java.util.Scanner;
 
 public class Knn {
 
+	@SuppressWarnings("null")
 	public static void main(String[] args) throws IOException {
 
 		// File file = new File("G:/testy/img1PKT.txt");
@@ -112,9 +113,9 @@ public class Knn {
 				}
 				suma = Math.sqrt(suma);
 				if (suma >= 0.8) {
-					zapis.write("PARA : " + pom6 + pom7 + "\n"); // FORMAT
-																	// ZAPISU DO
-																	// PLIKU.
+					zapis.write(pom6 + pom7 + "\n"); // FORMAT
+														// ZAPISU DO
+														// PLIKU.
 					pom6 = "";
 				}
 				tabSum[z++] = suma; // WRZUCENIE SUMY DO TABLICY W CELACH
@@ -159,5 +160,74 @@ public class Knn {
 		in2.close();
 		fr.close();
 
+		FileReader fr3 = new FileReader("G:/testy/Knn12.txt");
+		BufferedReader bfr3 = new BufferedReader(fr3);
+		int liczbaPar = 0;
+		String pom8 = "", pom9;
+		// Point pkt;
+		ArrayList<String> listaPkt = new ArrayList<String>();
+		String linia;
+		int l2=0;
+		while ((linia = bfr3.readLine()) != null) // PKT PLIK WCZYTANIE DO
+		{
+
+			for (int i = 0; i < linia.length(); i++) {
+				if (Character.isDigit(linia.charAt(i)))
+				{
+					pom8 += linia.charAt(i);
+					if (linia.charAt(i + 1) == '.')
+						pom8 += linia.charAt(i + 1);
+					//System.out.println("POM 88888888888 " + pom8);
+				}
+
+				if (linia.charAt(i) ==' ')
+				{
+					l2++;
+					if(l2==2)
+					{
+						listaPkt.add(pom8); 
+						pom8="";
+						
+						
+					}
+					else if(l2==3)
+					{
+						//System.out.println( " POOOOOOOOOOOOOOOOOO   "+pom8);
+						listaPkt.add(pom8);  //WRZUCANIE WSP PKT x oraz y pierwsze 2 linie to pkt1 2 kolejne to jego sasiad.
+						pom8="";
+						l2=0;
+					}
+				
+					
+					
+				}
+			}
+
+		}
+
+		
+/*		 for(String pkt1 : listaPkt )
+		 {
+		 System.out.println("pkt STR  : " +pkt1);
+		 }*/
+		 
+		 Double a=0.0;
+
+		ArrayList<Point> points = new ArrayList<Point>(); //LISTA NA PKT DOPASOWANE
+		Iterator<String> it3 = listaPkt.iterator();
+		while (it3.hasNext()) {
+			Point point = new Point(); 
+			point.setX(Double.parseDouble(it3.next())); //PARSOWANIE STRINGA NA DOULBE
+			point.setY(Double.parseDouble(it3.next()));
+			points.add(point);
+
+		}
+
+		 for(Point pkt : points )	//SPRAWDZANIE CZY DOBRZE WRZUCA
+		 {
+		 System.out.println("pkt x  : " + pkt.getX() + " Y  " + pkt.getY());
+		 }
+		fr3.close();
 	}
+
 }
