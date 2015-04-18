@@ -6,24 +6,27 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
+
+import com.sun.xml.internal.ws.api.policy.ModelGenerator;
 
 public class Knn {
 
-	@SuppressWarnings("null")
 	public static void main(String[] args) throws IOException {
 
 		// File file = new File("G:/testy/img1PKT.txt");
 		// Scanner in = new Scanner(file);
-		File file2 = new File("G:/testy/img2PKT.txt");
-		Scanner in2 = new Scanner(file2);
+		// File file2 = new File("G:/testy/img2PKT.txt");
+		// Scanner in2 = new Scanner(file2);
 		ArrayList<String> lista = new ArrayList<String>();
 		ArrayList<String> lista2 = new ArrayList<String>();
-		FileReader fr = new FileReader("G:/testy/img1PKT.txt");
+		FileReader fr = new FileReader("G:/testy/img1DESC.txt");
 		BufferedReader bfr = new BufferedReader(fr);
-		FileReader fr2 = new FileReader("G:/testy/img2PKT.txt");
+		FileReader fr2 = new FileReader("G:/testy/img2DESC.txt");
 		BufferedReader bfr2 = new BufferedReader(fr2);
 
 		int liczbaPkt1 = 0, liczbaPkt2 = 0, liczbaPkt = 0; // ZMIENNE DO
@@ -94,10 +97,10 @@ public class Knn {
 
 				pom6 = it.next(); // WSPOLRZEDNE PKT
 				pom7 = it2.next();
-				System.out.println(pom6 + " POOOOOM 66");
-				System.out.println(pom7 + " POOOOOM 77");
+				// System.out.println(pom6 + " POOOOOM 66");
+				// System.out.println(pom7 + " POOOOOM 77");
 
-				System.out.println(pom4 + "POM4 PKT");
+				// System.out.println(pom4 + "POM4 PKT");
 				for (int j = 0; j < 64; j++) { // PRZECHODZENIE PO KOLEKCJACH W
 												// CELU POBRANIA DANYCH DESC
 					pom4 = it.next();
@@ -157,8 +160,9 @@ public class Knn {
 
 		zapis.close();
 
-		in2.close();
+		// in2.close();
 		fr.close();
+		fr2.close();
 
 		FileReader fr3 = new FileReader("G:/testy/Knn12.txt");
 		BufferedReader bfr3 = new BufferedReader(fr3);
@@ -167,67 +171,74 @@ public class Knn {
 		// Point pkt;
 		ArrayList<String> listaPkt = new ArrayList<String>();
 		String linia;
-		int l2=0;
+		int l2 = 0;
 		while ((linia = bfr3.readLine()) != null) // PKT PLIK WCZYTANIE DO
 		{
 
 			for (int i = 0; i < linia.length(); i++) {
-				if (Character.isDigit(linia.charAt(i)))
-				{
+				if (Character.isDigit(linia.charAt(i))) {
 					pom8 += linia.charAt(i);
 					if (linia.charAt(i + 1) == '.')
 						pom8 += linia.charAt(i + 1);
-					//System.out.println("POM 88888888888 " + pom8);
+					// System.out.println("POM 88888888888 " + pom8);
 				}
 
-				if (linia.charAt(i) ==' ')
-				{
+				if (linia.charAt(i) == ' ') {
 					l2++;
-					if(l2==2)
-					{
-						listaPkt.add(pom8); 
-						pom8="";
-						
-						
+					if (l2 == 2) {
+						listaPkt.add(pom8);
+						pom8 = "";
+
+					} else if (l2 == 3) {
+						// System.out.println( " POOOOOOOOOOOOOOOOOO   "+pom8);
+						listaPkt.add(pom8); // WRZUCANIE WSP PKT x oraz y
+											// pierwsze 2 linie to pkt1 2
+											// kolejne to jego sasiad.
+						pom8 = "";
+						l2 = 0;
 					}
-					else if(l2==3)
-					{
-						//System.out.println( " POOOOOOOOOOOOOOOOOO   "+pom8);
-						listaPkt.add(pom8);  //WRZUCANIE WSP PKT x oraz y pierwsze 2 linie to pkt1 2 kolejne to jego sasiad.
-						pom8="";
-						l2=0;
-					}
-				
-					
-					
+
 				}
 			}
 
 		}
 
-		
-/*		 for(String pkt1 : listaPkt )
-		 {
-		 System.out.println("pkt STR  : " +pkt1);
-		 }*/
-		 
-		 Double a=0.0;
+		/*
+		 * for(String pkt1 : listaPkt ) { System.out.println("pkt STR  : "
+		 * +pkt1); }
+		 */
 
-		ArrayList<Point> points = new ArrayList<Point>(); //LISTA NA PKT DOPASOWANE
+		Double a = 0.0;
+
+		ArrayList<Point> points = new ArrayList<Point>(); // LISTA NA PKT
+															// DOPASOWANE
 		Iterator<String> it3 = listaPkt.iterator();
 		while (it3.hasNext()) {
-			Point point = new Point(); 
-			point.setX(Double.parseDouble(it3.next())); //PARSOWANIE STRINGA NA DOULBE
+			Point point = new Point();
+			point.setX(Double.parseDouble(it3.next())); // PARSOWANIE STRINGA NA
+														// DOULBE
 			point.setY(Double.parseDouble(it3.next()));
 			points.add(point);
 
 		}
-
-		 for(Point pkt : points )	//SPRAWDZANIE CZY DOBRZE WRZUCA
-		 {
-		 System.out.println("pkt x  : " + pkt.getX() + " Y  " + pkt.getY());
-		 }
+		PrintWriter zapis2 = new PrintWriter("G:/testy/Knn1-2.txt");
+		DecimalFormat df = new DecimalFormat("#.###");
+		for (Point pkt : points) // SPRAWDZANIE CZY DOBRZE WRZUCA
+		{
+		//	System.out.println("pkt x  : " + String.format("%.3f", pkt.getX())
+		//			+ " Y  " + String.format("%.3f", pkt.getY()));
+			zapis2.write(df.format(pkt.getX()) + " "
+					+ df.format(pkt.getY()) + "\n");  //zapis do formatu taki jak w przykladach
+		}
 		fr3.close();
+		zapis2.close();
+
+		// RansacMulti ransac = new RansacMulti(200, 20, null, null);
+
+		// ransac.dataSet=points;
+
+		// ransac.process(points);
+
 	}
 
 }
